@@ -18,9 +18,9 @@ public class AdvancedOrbitCamera : MonoBehaviour
     [SerializeField] private float maxVerticalAngle = 80f;
 
     [SerializeField] private Camera cam;
-    private Transform target;
+    //private Transform target;
     private Transform theObjectBeingFollowed;
-    [SerializeField]private float normalizedDistance=0.1f;
+    //[SerializeField]private float normalizedDistance=0.1f;
 
     // Для двойного клика
     private float lastClickTime;
@@ -37,17 +37,21 @@ public class AdvancedOrbitCamera : MonoBehaviour
 
     void Start()
     {
+        // переменная для реализации синглтона
         thisScript = this;
 
+        //проверка наличия камеры
         if (cam == null)
             cam = Camera.main;
-
+        
+        //создайтся пустышка, на которую потом будет ориентироватся камера
         theObjectBeingFollowed = new GameObject("TheObjectThatTheCameraFollows").transform;
         theObjectBeingFollowed.transform.position = new Vector3(0, 0, 0);
 
+        //ставим камеру сразу туда, где она может быть в зависимоти от допустимых расстояний (дистанции)
         currentDistance = Mathf.Clamp(currentDistance, minDistance, maxDistance);
 
-        // Начальные углы (можно менять)
+        //назначение допустимых углов вращения камеры, если они не были заданы в инспекторе
         xRotation = 45f;
         yRotation = 0f;
     }
@@ -81,8 +85,8 @@ public class AdvancedOrbitCamera : MonoBehaviour
                 lastClickTime = 0f; // сбрасываем, чтобы не было тройных срабатываний подряд
                 return;
             }
-
-            lastClickTime = Time.time;
+            else
+                lastClickTime = Time.time;
         }
     }
 
@@ -91,9 +95,10 @@ public class AdvancedOrbitCamera : MonoBehaviour
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            target = hit.transform;
-            theObjectBeingFollowed.transform.position = target.position;
-            // Опционально: можно сразу поставить дистанцию до объекта
+            //target = hit.transform;
+
+            theObjectBeingFollowed.transform.position = hit.transform.position;
+            //устанавливается дистанция до объекта
             currentDistance = Mathf.Clamp(hit.distance, minDistance, maxDistance);
         }
     }
@@ -146,7 +151,7 @@ public class AdvancedOrbitCamera : MonoBehaviour
             float delta = scroll * zoomSpeed * 10f;
             currentDistance -= delta;
             currentDistance = Mathf.Clamp(currentDistance, minDistance, maxDistance);
-            normalizedDistance= Mathf.InverseLerp(minDistance, maxDistance, currentDistance);
+            //normalizedDistance= Mathf.InverseLerp(minDistance, maxDistance, currentDistance);
 
         }
     }
@@ -167,12 +172,17 @@ public class AdvancedOrbitCamera : MonoBehaviour
 
     bool IsPointerOverUI()
     {
+        //проверяем наличие EventSystem в сцене
         if (EventSystem.current == null)
             return false;
+        //просим EventSystem сказать над чем сейчас курсор: над UI или нет
         return EventSystem.current.IsPointerOverGameObject();
     }
+
+    //нужно по тому, что текст в игре масштабируется в зависимости от близости камеры к обьектам
     public static float GetNormalizedDistance()
     {
-        return thisScript.normalizedDistance;
+        //return thisScript.normalizedDistance;
+        return Mathf.InverseLerp(thisScript.minDistance, thisScript.maxDistance, thisScript.currentDistance);
     }
 }
