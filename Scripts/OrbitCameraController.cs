@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEditor.FilePathAttribute;
 
 //[RequireComponent(typeof(Camera))]
 public class AdvancedOrbitCamera : MonoBehaviour
@@ -33,6 +34,8 @@ public class AdvancedOrbitCamera : MonoBehaviour
     // Чтобы зум работал корректно с орбитой, нужно хранить дистанцию отдельно
     private float currentDistance;
 
+    private Vector3 newMovePosition;
+
     private static AdvancedOrbitCamera thisScript;
 
     void Start()
@@ -44,7 +47,7 @@ public class AdvancedOrbitCamera : MonoBehaviour
         if (cam == null)
             cam = Camera.main;
         
-        //создайтся пустышка, на которую потом будет ориентироватся камера
+        //создаётся пустышка, на которую потом будет ориентироватся камера
         theObjectBeingFollowed = new GameObject("TheObjectThatTheCameraFollows").transform;
         theObjectBeingFollowed.transform.position = new Vector3(0, 0, 0);
 
@@ -114,10 +117,19 @@ public class AdvancedOrbitCamera : MonoBehaviour
             float moveY = Input.GetAxis("Mouse Y");
 
             // Двигаем по плоскости XZ, игнорируя Y (чтобы не «летать» вверх/вниз)
-            Vector3 moveDir = new Vector3(moveX, 0f, moveY).normalized;
+            //Vector3 moveDir = new Vector3(moveX, 0f, moveY).normalized;
+
+            Vector3 moveDirLocal = new Vector3(moveX, 0f, moveY).normalized;
+
+            // Переводим локальное направление в мировое, но без вертикальной компоненты
+            Vector3 moveDir = theObjectBeingFollowed.transform.TransformDirection(moveDirLocal);
+            moveDir.y = 0f;              // «прижимаем» к земле
+            moveDir.Normalize();         // нормализуем заново, т.к. Y обнулили
+
             if (moveDir.magnitude >= 0.01f)
             {
-                theObjectBeingFollowed.transform.Translate(moveDir * moveSpeed * Time.deltaTime, Space.World);
+                newMovePosition = moveDir * moveSpeed * Time.deltaTime;
+                //theObjectBeingFollowed.transform.Translate(moveDir * moveSpeed * Time.deltaTime, Space.World);
             }
         }
     }
@@ -164,10 +176,22 @@ public class AdvancedOrbitCamera : MonoBehaviour
 
     void UpdateOrbitPosition()
     {
+        if (newMovePosition != Vector3.zero)
+        {
+            theObjectBeingFollowed.transform.Translate(newMovePosition, Space.World);
+            newMovePosition = Vector3.zero;
+        }
+
         Quaternion rotation = Quaternion.Euler(xRotation, yRotation, 0f);
         Vector3 offset = rotation * Vector3.back * currentDistance;
+        theObjectBeingFollowed.transform.rotation= rotation;
         cam.transform.position = theObjectBeingFollowed.position + offset;
         cam.transform.LookAt(theObjectBeingFollowed.position);
+
+        //Quaternion rotation = Quaternion.Euler(xRotation, yRotation, 0f);
+        //Vector3 offset = rotation * Vector3.back * currentDistance;
+        //cam.transform.position = theObjectBeingFollowed.position + offset;
+        //cam.transform.LookAt(theObjectBeingFollowed.position);
     }
 
     bool IsPointerOverUI()
