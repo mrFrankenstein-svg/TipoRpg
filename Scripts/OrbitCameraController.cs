@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using static UnityEditor.FilePathAttribute;
 
 //[RequireComponent(typeof(Camera))]
 public class AdvancedOrbitCamera : MonoBehaviour
