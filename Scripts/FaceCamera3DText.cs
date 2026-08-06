@@ -10,7 +10,9 @@ public class FaceCamera3DText : MonoBehaviour
     [SerializeField] private float minTextSize=0.02f;
     [SerializeField] private float maxTextSize=0.7f;
     private static FaceCamera3DText thisScript;
+    //private GameSettings gameSettings;
 
+    /*
     //public static event Action<GameObject> AddNewObjectEvent;
     //public static event Action<GameObject> DeleteObjectEvent;
     //private void OnEnable()
@@ -22,11 +24,27 @@ public class FaceCamera3DText : MonoBehaviour
     //{
     //    AddNewObjectEvent -= AddNewObject;
     //    DeleteObjectEvent -= DeleteObject;
-    //}
+    //}*/
+    private void OnEnable()
+    {
+        GameSetingsManager.OnSettingsChange += UpdateSettingsValue;
+    }
+    private void OnDisable()
+    {
+        GameSetingsManager.OnSettingsChange -= UpdateSettingsValue;
+    }
+    private void UpdateSettingsValue()
+    {
+        GameSettings gameSettings = GameSetingsManager.GetSettings();
+        minTextSize=gameSettings.minTextSize;
+        maxTextSize=gameSettings.maxTextSize;
+    }
 
     void Start()
     {
         thisScript = this;
+        UpdateSettingsValue();
+
         if (targetCamera == null)
             targetCamera = Camera.main;
     }
@@ -45,9 +63,13 @@ public class FaceCamera3DText : MonoBehaviour
                 Quaternion rot = Quaternion.LookRotation(direction * -1, Vector3.up);
                 item.transform.rotation = rot;
                 float i = AdvancedOrbitCamera.GetNormalizedDistance();
-                i = Mathf.Lerp(minTextSize, maxTextSize, i);
 
-                item.transform.localScale = new Vector3(i, i, i);
+                //так работало, но оно меняло весь размер обьекта. Один раз из-за того, что объект был большим и текст стал гигнским
+                //i = Mathf.Lerp(minTextSize, maxTextSize, i);
+                //item.transform.localScale = new Vector3(i, i, i);
+
+                i = Mathf.Lerp(minTextSize, maxTextSize, i);
+                item.GetComponent<RectTransform>().sizeDelta = new Vector2(i, i);
             }
         }
     }

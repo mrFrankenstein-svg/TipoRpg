@@ -20,6 +20,7 @@ public class AdvancedOrbitCamera : MonoBehaviour
     [SerializeField] private Camera cam;
     //private Transform target;
     private Transform theObjectBeingFollowed;
+    //нормализированная дистанция тоже пусть будет, чтобы не считать её по 10 раз в секунду
     //[SerializeField]private float normalizedDistance=0.1f;
 
     // Для двойного клика
