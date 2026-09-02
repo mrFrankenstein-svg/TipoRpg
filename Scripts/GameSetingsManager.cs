@@ -11,6 +11,8 @@ public class GameSettings //это просто контейнер, которы
 
 public class GameSetingsManager : MonoBehaviour
 {
+    [Header("Скрипт который будет применять настроки из окна 'Настроки'.\n" +
+        "Так же к этому скрипту нужно обращатся чтобы загрузить настроки в соответствующее окно.")]
     public static Action OnSettingsChange;
     private GameSettings _settings;
     private static GameSetingsManager thisScript;

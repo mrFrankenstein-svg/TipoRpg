@@ -4,6 +4,8 @@ using System.Linq;
 
 public class ChangingTheBackgroundColor : MonoBehaviour
 {
+    [Header("Этот скрипт для смены цвета бэкграунда.\n" +
+        "Используется только на одном экране с соответствующим названием и смсыслом.\n")]
     [SerializeField] private Camera mainCamera;
     [SerializeField] private TextMeshProUGUI textField;
 

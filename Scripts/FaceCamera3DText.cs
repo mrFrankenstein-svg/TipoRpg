@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class FaceCamera3DText : MonoBehaviour
 {
+    [Header("Скрипт разворачичает все тексты в направлении камерыи масштабирует их.\n")]
     [SerializeField] private Camera targetCamera;
     [SerializeField] private List<GameObject> faces = new List<GameObject>();
     [SerializeField] private float minTextSize=0.02f;

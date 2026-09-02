@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 //[RequireComponent(typeof(Camera))]
 public class AdvancedOrbitCamera : MonoBehaviour
 {
+    [Header("Скрипт управляющем вращением камеры и выбором цели.\n")]
     [Header("Настройки движения")]
     [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private float rotationSpeed = 15f;
