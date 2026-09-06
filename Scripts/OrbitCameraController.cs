@@ -1,5 +1,7 @@
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static SelectingTheObjectUnderTheCursor;
 
 //[RequireComponent(typeof(Camera))]
 public class AdvancedOrbitCamera : MonoBehaviour
@@ -24,9 +26,9 @@ public class AdvancedOrbitCamera : MonoBehaviour
     //нормализированная дистанция тоже пусть будет, чтобы не считать её по 10 раз в секунду
     //[SerializeField]private float normalizedDistance=0.1f;
 
-    // Для двойного клика
-    private float lastClickTime;
-    private const float doubleClickThreshold = 0.3f; // время в секундах для двойного клика
+    //// Для двойного клика
+    //private float lastClickTime;
+    //private const float doubleClickThreshold = 0.3f; // время в секундах для двойного клика
 
     // Орбитальные углы
     private float xRotation;
@@ -38,6 +40,20 @@ public class AdvancedOrbitCamera : MonoBehaviour
     private Vector3 newMovePosition;
 
     private static AdvancedOrbitCamera thisScript;
+    private void OnEnable()
+    {
+        MouseClickAndAScrollWheel.OnDoubleLMBClick += HandleDoubleClick;
+        MouseClickAndAScrollWheel.OnLMBHold += HandleMovement;
+        MouseClickAndAScrollWheel.OnRMBHold += HandleRotation;
+        MouseClickAndAScrollWheel.OnWheelRoll += HandleZoom;
+    }
+    private void OnDisable()
+    {
+        MouseClickAndAScrollWheel.OnDoubleLMBClick -= HandleDoubleClick;
+        MouseClickAndAScrollWheel.OnLMBHold -= HandleMovement;
+        MouseClickAndAScrollWheel.OnRMBHold -= HandleRotation;
+        MouseClickAndAScrollWheel.OnWheelRoll -= HandleZoom;
+    }
 
     void Start()
     {
@@ -65,10 +81,10 @@ public class AdvancedOrbitCamera : MonoBehaviour
         if (IsPointerOverUI())
             return; // если курсор над UI — ничего не делаем
 
-        HandleDoubleClick();
-        HandleMovement();
-        HandleRotation();
-        HandleZoom();
+        //HandleDoubleClick();
+        //HandleMovement();
+        //HandleRotation();
+        //HandleZoom();
 
         UpdateOrbitPosition();
     }
@@ -78,6 +94,8 @@ public class AdvancedOrbitCamera : MonoBehaviour
     /// </summary>
     void HandleDoubleClick()
     {
+        /*
+        так выглядел этот метод до того, как я выделил обработку нажатий мышью в отдельный скрипт
         if (Input.GetMouseButtonDown(0))
         {
             float timeSinceLastClick = Time.time - lastClickTime;
@@ -91,6 +109,15 @@ public class AdvancedOrbitCamera : MonoBehaviour
             }
             else
                 lastClickTime = Time.time;
+        }
+        */
+
+        SelectObjectResult hitResult = SelectingTheObjectUnderTheCursor.SelectObject();
+        if (hitResult.isHit == true)
+        {
+            theObjectBeingFollowed.transform.position = hitResult.hit.transform.position;
+            //устанавливается дистанция до объекта
+            currentDistance = Mathf.Clamp(hitResult.hit.distance, minDistance, maxDistance);
         }
     }
 
@@ -112,8 +139,8 @@ public class AdvancedOrbitCamera : MonoBehaviour
     /// </summary>
     void HandleMovement()
     {
-        if (Input.GetMouseButton(0)) // зажата левая кнопка
-        {
+        //if (Input.GetMouseButton(0)) // зажата левая кнопка
+        //{
             float moveX = Input.GetAxis("Mouse X");
             float moveY = Input.GetAxis("Mouse Y");
 
@@ -132,7 +159,7 @@ public class AdvancedOrbitCamera : MonoBehaviour
                 newMovePosition = moveDir * moveSpeed * Time.deltaTime;
                 //theObjectBeingFollowed.transform.Translate(moveDir * moveSpeed * Time.deltaTime, Space.World);
             }
-        }
+        //}
     }
 
     /// <summary>
@@ -140,8 +167,8 @@ public class AdvancedOrbitCamera : MonoBehaviour
     /// </summary>
     void HandleRotation()
     {
-        if (Input.GetMouseButton(1)) // зажата правая кнопка
-        {
+        //if (Input.GetMouseButton(1)) // зажата правая кнопка
+        //{
             float mouseX = Input.GetAxis("Mouse X") * rotationSpeed;
             float mouseY = Input.GetAxis("Mouse Y") * rotationSpeed;
 
@@ -149,7 +176,7 @@ public class AdvancedOrbitCamera : MonoBehaviour
             xRotation -= mouseY;
 
             xRotation = Mathf.Clamp(xRotation, minVerticalAngle, maxVerticalAngle);
-        }
+        //}
     }
 
     /// <summary>
