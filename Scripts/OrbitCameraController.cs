@@ -7,6 +7,7 @@ using static SelectingTheObjectUnderTheCursor;
 public class AdvancedOrbitCamera : MonoBehaviour
 {
     [Header("Скрипт управляющем вращением камеры и выбором цели.\n")]
+
     [Header("Настройки движения")]
     [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private float rotationSpeed = 15f;
@@ -104,6 +105,8 @@ public class AdvancedOrbitCamera : MonoBehaviour
             {
                 // Это двойной клик
                 SelectTarget();
+                //SelectTarget()- это отдельный метод в этом скрипте, который я располовинил в отдельный скрипт, и в новый метод HandleDoubleClick()
+                //сам SelectTarget() закоментил и он находится где-то внизу, если не удалил
                 lastClickTime = 0f; // сбрасываем, чтобы не было тройных срабатываний подряд
                 return;
             }
@@ -121,7 +124,7 @@ public class AdvancedOrbitCamera : MonoBehaviour
         }
     }
 
-    void SelectTarget()
+    /*void SelectTarget()
     {
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit))
@@ -132,7 +135,7 @@ public class AdvancedOrbitCamera : MonoBehaviour
             //устанавливается дистанция до объекта
             currentDistance = Mathf.Clamp(hit.distance, minDistance, maxDistance);
         }
-    }
+    }*/
 
     /// <summary>
     /// Зажатая ЛКМ = движение камеры по горизонтали
