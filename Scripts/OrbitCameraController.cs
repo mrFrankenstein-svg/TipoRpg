@@ -185,10 +185,10 @@ public class AdvancedOrbitCamera : MonoBehaviour
     /// <summary>
     /// Колёсико = зум
     /// </summary>
-    void HandleZoom()
+    void HandleZoom(float scroll)
     {
         // Сначала обрабатываем зум для орбиты
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        //float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (scroll != 0f)
         {
             float delta = scroll * zoomSpeed * 10f;

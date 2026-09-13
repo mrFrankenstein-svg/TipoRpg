@@ -1,0 +1,82 @@
+
+ChangingTheBackgroundColor
+Скрипт просто меняет цвет фота у главной камеры
+
+	Функции, которые вызываются с кнопки на Convas:
+		SetColor()
+			Проверяет наличие в своих полях камеры и текста, нужного для работы и если нет- кидает ошибку.
+			Потом лямба-выражением парчит текст, а результат применяется на mainCamera.backgroundColor
+
+
+ConvasObjChanger
+Скрипт овечает за смену открываемых окон Сanvas и чтобы ничего нигде не оставалось и не потерялось
+По сути это менеджер окон, которые можно открыть.
+
+	Функции, которые вызываются при начале работы:
+		Start()
+			проверяет пустые ли поля canvas и mainTab и если да- вызывает NullReferenceException,
+			а если нет- добовляет уже активное по умолчанию поле mainTab в openedObjList для начала работы.
+
+	Функции, которые вызываются с кнопки на Convas:
+		OpenNewObj(GameObject newObj)
+			!!!не проверяет что ему передают. Подразумевается, что передается только и исключительно окна на Convas
+			Закрывает последнее добавленное в openedObjList окно, делает передаваемое окно активным и добавляет его в openedObjList.
+		OpenLastObj()
+			Закрывает последнее добавленное в openedObjList окно, удаляет последнее значение из openedObjList,
+			делает активным последнее значение из openedObjList.
+		CloseAllAndOpenMainTab()
+			SetActive(false) и openedObjList.Remove для каждого значения в openedObjList, кроме самого первого. 
+			Для самого первого значения openedObjList SetActive(true).
+
+
+FaceCamera3DText
+Скрипт разворачичает все тексты в направлении камерыи масштабирует их. Скрипт для ориентации текста.
+
+	Функции, которые вызываются при начале работы:
+		Start()
+			Реализует Синглтон;
+			Обновляет настройки масштаба такста;
+			Проверяте наличие камеры и если нету её- выберает Camera.main в качестве главной.
+		OnEnable()
+			Подписывается на событе изменения настроек.
+
+	Функции, которые вызываются перед концом работы:
+		OnDisable()
+			Отписывается от события изменения настроек.
+
+	Функции, которые вызываются каждый кадр:
+		Update()
+			Вызывает TextRotation().
+
+	Функции, которые вызываются другими функциями:
+		TextRotation()
+			Проверяет есть ли что-нибудь в faces (есть ли что ориентировать);
+			для каждого обьекта в faces вычисляет напровление и расстояние до камеры;
+			меняет <RectTransform>().sizeDelta для обьекта на основе вычесленного растояние до камеры.
+		AddNewObject(GameObject obj)
+			выберает и детей obj объект с TMP_Text;
+			добавляет этот объект в faces.
+		DeleteObject(GameObject obj)
+			выберает и детей obj объект с TMP_Text;
+			удаляет этот объект из faces.
+
+
+MouseClickAndAScrollWheel
+Скрипт отслеживающий кнопки мыши и колёсико, а потом отправляет события с тем, что произошло.
+	
+	Функции, которые вызываются каждый кадр:
+		Update()
+			Вызывает HandleDoubleClickLMBOrOneClickLMB(), HandleLMBHolding(), HandleRMBHolding(),WheelRooling().
+
+	Функции, которые вызываются другими функциями:
+		HandleDoubleClickLMBOrOneClickLMB()
+			При нажатии Input.GetMouseButtonDown(0) проверяет время прошлого клика и если оно меньше doubleClickThreshold- 
+			делает OnDoubleLMBClick?.Invoke(); иначе- OnLMBClick?.Invoke().
+		HandleLMBHolding()
+			Когда ЗАЖАТА Input.GetMouseButton(0)- OnLMBHold?.Invoke();
+		HandleRMBHolding()
+			Когда ЗАЖАТА nput.GetMouseButton(1)- OnRMBHold?.Invoke();
+		WheelRooling()
+			Когда Input.GetAxis("Mouse ScrollWheel") != 0- вызывается OnWheelRoll?.Invoke(Input.GetAxis("Mouse ScrollWheel")).
+
+

@@ -9,16 +9,17 @@ public class ConvasObjChanger : MonoBehaviour
     [SerializeField] private GameObject canvas;
     [SerializeField] private GameObject mainTab;
 
-    private List<GameObject> openedObjList = new List<GameObject>();
+    [SerializeField] private List<GameObject> openedObjList = new List<GameObject>();
 
     private void Start()
     {
-        openedObjList.Add(mainTab);
-
         if (canvas == null | mainTab == null)
         {
             throw new NullReferenceException("canvas или mainTab не назначен");
         }
+        else
+            openedObjList.Add(mainTab);
+
     }
     public void OpenNewObj(GameObject newObj)
     {

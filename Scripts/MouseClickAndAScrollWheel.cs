@@ -10,16 +10,12 @@ public class MouseClickAndAScrollWheel : MonoBehaviour
     public static Action OnDoubleLMBClick;
     public static Action OnRMBClick;
     public static Action OnRMBHold;
-    public static Action OnWheelRoll;
+    public static Action<float> OnWheelRoll;
     
     // Для двойного клика
     private float lastClickTime;
     private const float doubleClickThreshold = 0.3f; // время в секундах для двойного клика
 
-    void Start()
-    {
-        
-    }
     void HandleDoubleClickLMBOrOneClickLMB()
     {
         if (Input.GetMouseButtonDown(0))
@@ -56,7 +52,7 @@ public class MouseClickAndAScrollWheel : MonoBehaviour
     {
         if (Input.GetAxis("Mouse ScrollWheel") != 0)
         { 
-            OnWheelRoll?.Invoke();
+            OnWheelRoll?.Invoke(Input.GetAxis("Mouse ScrollWheel"));
         }
     }
     void Update()
