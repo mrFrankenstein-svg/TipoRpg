@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 using static SelectingTheObjectUnderTheCursor;
 
 //[RequireComponent(typeof(Camera))]
-public class AdvancedOrbitCamera : MonoBehaviour
+public class OrbitCameraController : MonoBehaviour
 {
     [Header("Скрипт управляющем вращением камеры и выбором цели.\n")]
 
@@ -40,7 +40,7 @@ public class AdvancedOrbitCamera : MonoBehaviour
 
     private Vector3 newMovePosition;
 
-    private static AdvancedOrbitCamera thisScript;
+    private static OrbitCameraController thisScript;
     private void OnEnable()
     {
         MouseClickAndAScrollWheel.OnDoubleLMBClick += HandleDoubleClick;

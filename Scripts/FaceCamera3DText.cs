@@ -63,7 +63,7 @@ public class FaceCamera3DText : MonoBehaviour
                 Vector3 direction = targetCamera.transform.position - item.transform.position;
                 Quaternion rot = Quaternion.LookRotation(direction * -1, Vector3.up);
                 item.transform.rotation = rot;
-                float i = AdvancedOrbitCamera.GetNormalizedDistance();
+                float i = OrbitCameraController.GetNormalizedDistance();
 
                 //так работало, но оно меняло весь размер обьекта. Один раз из-за того, что объект был большим и текст стал гигнским
                 //i = Mathf.Lerp(minTextSize, maxTextSize, i);

@@ -80,3 +80,32 @@ MouseClickAndAScrollWheel
 			Когда Input.GetAxis("Mouse ScrollWheel") != 0- вызывается OnWheelRoll?.Invoke(Input.GetAxis("Mouse ScrollWheel")).
 
 
+OrbitCameraController
+Скрипт управляющем вращением камеры и выбором цели.
+
+	Функции, которые вызываются при начале работы:
+		Start()
+			Реализует Синглтон;
+			Проверяет наличие камеры и если нету её- выберает Camera.main в качестве главной;
+			Создаётся пустышка, на которую потом будет ориентироватся камера;
+			Ставится камеру сразу туда, где она может быть в зависимоти от допустимых расстояний (дистанции);
+			Назначаются допустимые углы вращения камеры, если они не были заданы в инспекторе.
+		OnEnable()
+			Подписывается на событя связанные с мышью (MouseClickAndAScrollWheel).
+
+	Функции, которые вызываются перед концом работы:
+		OnDisable()
+			Отписывается от событий связанных с мышью (MouseClickAndAScrollWheel).
+
+	Функции, которые вызываются каждый кадр:
+		Update()
+			Вызывает if (IsPointerOverUI());
+			Если true- вызывает UpdateOrbitPosition()
+
+	Функции, которые вызываются другими функциями:
+		HandleDoubleClick()
+			Вызывает райкаст из метода SelectObjectResult в контейнер hitResult;
+			Если райкаст попал- устанавливает theObjectBeingFollowed.transform.position от этой точки
+			и вычисляет от неё currentDistance.
+		HandleMovement()
+			
