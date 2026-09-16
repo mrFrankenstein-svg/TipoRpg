@@ -64,7 +64,7 @@ public class OrbitCameraController : MonoBehaviour
         //проверка наличия камеры
         if (cam == null)
             cam = Camera.main;
-        
+
         //создаётся пустышка, на которую потом будет ориентироватся камера
         theObjectBeingFollowed = new GameObject("TheObjectThatTheCameraFollows").transform;
         theObjectBeingFollowed.transform.position = new Vector3(0, 0, 0);
@@ -142,27 +142,25 @@ public class OrbitCameraController : MonoBehaviour
     /// </summary>
     void HandleMovement()
     {
-        //if (Input.GetMouseButton(0)) // зажата левая кнопка
-        //{
-            float moveX = Input.GetAxis("Mouse X");
-            float moveY = Input.GetAxis("Mouse Y");
+        float moveX = Input.GetAxis("Mouse X");
+        float moveY = Input.GetAxis("Mouse Y");
 
-            // Двигаем по плоскости XZ, игнорируя Y (чтобы не «летать» вверх/вниз)
-            //Vector3 moveDir = new Vector3(moveX, 0f, moveY).normalized;
+        // Двигаем по плоскости XZ, игнорируя Y (чтобы не «летать» вверх/вниз)
+        //Vector3 moveDir = new Vector3(moveX, 0f, moveY).normalized;
 
-            Vector3 moveDirLocal = new Vector3(moveX, 0f, moveY).normalized;
+        Vector3 moveDirLocal = new Vector3(moveX, 0f, moveY).normalized;
 
-            // Переводим локальное направление в мировое, но без вертикальной компоненты
-            Vector3 moveDir = theObjectBeingFollowed.transform.TransformDirection(moveDirLocal);
-            moveDir.y = 0f;              // «прижимаем» к земле
-            moveDir.Normalize();         // нормализуем заново, т.к. Y обнулили
+        // Переводим локальное направление в мировое, но без вертикальной компоненты
+        Vector3 moveDir = theObjectBeingFollowed.transform.TransformDirection(moveDirLocal);
+        moveDir.y = 0f;              // «прижимаем» к земле
+        moveDir.Normalize();         // нормализуем заново, т.к. Y обнулили
 
-            if (moveDir.magnitude >= 0.01f)
-            {
-                newMovePosition = moveDir * moveSpeed * Time.deltaTime;
-                //theObjectBeingFollowed.transform.Translate(moveDir * moveSpeed * Time.deltaTime, Space.World);
-            }
-        //}
+        if (moveDir.magnitude >= 0.01f)
+        {
+            newMovePosition = moveDir * moveSpeed * Time.deltaTime;
+            //theObjectBeingFollowed.transform.Translate(moveDir * moveSpeed * Time.deltaTime, Space.World);
+        }
+
     }
 
     /// <summary>
@@ -170,16 +168,13 @@ public class OrbitCameraController : MonoBehaviour
     /// </summary>
     void HandleRotation()
     {
-        //if (Input.GetMouseButton(1)) // зажата правая кнопка
-        //{
-            float mouseX = Input.GetAxis("Mouse X") * rotationSpeed;
-            float mouseY = Input.GetAxis("Mouse Y") * rotationSpeed;
+        float mouseX = Input.GetAxis("Mouse X") * rotationSpeed;
+        float mouseY = Input.GetAxis("Mouse Y") * rotationSpeed;
 
-            yRotation += mouseX;
-            xRotation -= mouseY;
+        yRotation += mouseX;
+        xRotation -= mouseY;
 
-            xRotation = Mathf.Clamp(xRotation, minVerticalAngle, maxVerticalAngle);
-        //}
+        xRotation = Mathf.Clamp(xRotation, minVerticalAngle, maxVerticalAngle);
     }
 
     /// <summary>
@@ -215,7 +210,7 @@ public class OrbitCameraController : MonoBehaviour
 
         Quaternion rotation = Quaternion.Euler(xRotation, yRotation, 0f);
         Vector3 offset = rotation * Vector3.back * currentDistance;
-        theObjectBeingFollowed.transform.rotation= rotation;
+        theObjectBeingFollowed.transform.rotation = rotation;
         cam.transform.position = theObjectBeingFollowed.position + offset;
         cam.transform.LookAt(theObjectBeingFollowed.position);
 
