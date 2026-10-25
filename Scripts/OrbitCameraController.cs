@@ -11,7 +11,8 @@ public class OrbitCameraController : MonoBehaviour
     [Header("Настройки движения")]
     [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private float rotationSpeed = 15f;
-    [SerializeField] private float zoomSpeed = 5f;
+    [SerializeField] private float zoomSpeed = 5f; 
+    [SerializeField] private float zoomSensitivity = 10f;
 
     [Header("Дистанция")]
     [SerializeField] private float minDistance = 2f;
@@ -24,8 +25,9 @@ public class OrbitCameraController : MonoBehaviour
     [SerializeField] private Camera cam;
     //private Transform target;
     private Transform theObjectBeingFollowed;
+
     //нормализированная дистанция тоже пусть будет, чтобы не считать её по 10 раз в секунду
-    //[SerializeField]private float normalizedDistance=0.1f;
+    private float normalizedDistance=0.1f;
 
     //// Для двойного клика
     //private float lastClickTime;
@@ -186,10 +188,10 @@ public class OrbitCameraController : MonoBehaviour
         //float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (scroll != 0f)
         {
-            float delta = scroll * zoomSpeed * 10f;
+            float delta = scroll * zoomSpeed * zoomSensitivity;
             currentDistance -= delta;
             currentDistance = Mathf.Clamp(currentDistance, minDistance, maxDistance);
-            //normalizedDistance= Mathf.InverseLerp(minDistance, maxDistance, currentDistance);
+            normalizedDistance= Mathf.InverseLerp(minDistance, maxDistance, currentDistance);
 
         }
     }
@@ -232,7 +234,7 @@ public class OrbitCameraController : MonoBehaviour
     //нужно по тому, что текст в игре масштабируется в зависимости от близости камеры к обьектам
     public static float GetNormalizedDistance()
     {
-        //return thisScript.normalizedDistance;
-        return Mathf.InverseLerp(thisScript.minDistance, thisScript.maxDistance, thisScript.currentDistance);
+        return thisScript.normalizedDistance;
+        //return Mathf.InverseLerp(thisScript.minDistance, thisScript.maxDistance, thisScript.currentDistance);
     }
 }
