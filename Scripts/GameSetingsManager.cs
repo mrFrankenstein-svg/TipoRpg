@@ -24,6 +24,7 @@ public class GameSetingsManager : MonoBehaviour
     }
     public static GameSettings GetSettings()
     {
+        //нужно придумать способ как передавать  файл с настройками не передавая ссылку на сам _settings
         return thisScript._settings;
     }
 
@@ -33,6 +34,8 @@ public class GameSetingsManager : MonoBehaviour
         string json = JsonUtility.ToJson(_settings, true);
 
 #if UNITY_WEBGL && !UNITY_EDITOR
+        //Сюда нужно дописать что-нибудь приемлемое для работы с WebGL. Хотябы загрузку-работу с снутренним хранилищем
+        
         // Для WebGL нельзя писать напрямую. Здесь можно вызвать JS для сохранения
         // или вообще ничего не делать, если используешь экспорт/импорт вручную.
         Debug.Log("WebGL: используйте экспорт/импорт вместо автосохранения");
@@ -47,6 +50,8 @@ public class GameSetingsManager : MonoBehaviour
         string path = Path.Combine(Application.persistentDataPath, "settings.json");
 
 #if UNITY_WEBGL && !UNITY_EDITOR
+        //Сюда нужно дописать что-нибудь приемлемое для работы с WebGL. Хотябы загрузку-работу с снутренним хранилищем
+        
         // В WebGL файл может отсутствовать, если не было импорта
         return new GameSettings();
 #else
@@ -60,6 +65,9 @@ public class GameSetingsManager : MonoBehaviour
 
     private void ApplySettings()
     {
+        //Сюда нужно дописать что-нибудь приемлемое для работы с WebGL. Хотябы загрузку-работу с снутренним хранилищем
+
+
         // Применяй настройки к громкости, шрифту и т.д.
 
         //Debug.Log($"Volume: {_settings.MasterVolume}, FontSize: {_settings.FontSize}");
